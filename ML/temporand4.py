@@ -1,15 +1,17 @@
-def Theadder(addvalue):
-    def tempFunc(x):
-        return x+addvalue
-    return tempFunc
+def Perceptron(TrainingSet, T):
+    theta0,theta1 , theta00= -3, 3, -3
+    returnList =[]
+    for i in range(T):
+        for j in range(len(TrainingSet)):
+            if TrainingSet[j][1]*(theta0*TrainingSet[j][0][0] + theta1*TrainingSet[j][0][1]+theta00) <=0 :
+                theta0, theta1, theta00 = theta0+TrainingSet[j][1]*TrainingSet[j][0][0] , theta1+TrainingSet[j][1]*TrainingSet[j][0][1], theta00+TrainingSet[j][1]
+                print(theta0,theta1, theta00)
+                returnList.append([theta0,theta1, theta00])
+    print(returnList)
 
-def get_sum_metrics(predictions, metrics=[]):
-    for i in range(3):
-        metrics.append(Theadder(i))
-    
-        
-
-print(get_sum_metrics(0))
-print(get_sum_metrics(1))
-print(get_sum_metrics(2))
-print(get_sum_metrics(3))
+if __name__ == "__main__":
+    Perceptron([[[-4,2],1],
+                [[-2,1],1],
+                [[-1,-1],-1],
+                [[2,2],-1],
+                [[1,-2],-1]], 1)
