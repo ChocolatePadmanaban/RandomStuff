@@ -288,6 +288,13 @@ def classify(feature_matrix, theta, theta_0):
     be considered a positive classification.
     """
     # Your code here
+    hypoarray=np.zeros(feature_matrix.shape[0])
+    for i in range(feature_matrix.shape[0]):
+        if np.dot(feature_matrix[i], theta)+theta_0 >0:
+            hypoarray[i]=1
+        else:
+            hypoarray[i]=-1
+    return hypoarray
     raise NotImplementedError
 #pragma: coderesponse end
 
@@ -326,6 +333,10 @@ def classifier_accuracy(
     accuracy of the trained classifier on the validation data.
     """
     # Your code here
+    theta , theta_0 = classifier(train_feature_matrix,train_labels,**kwargs)
+    train_acc = accuracy(classify(train_feature_matrix,theta,theta_0),train_labels)
+    val_acc = accuracy(classify(val_feature_matrix,theta,theta_0),val_labels)
+    return train_acc, val_acc
     raise NotImplementedError
 #pragma: coderesponse end
 
@@ -355,8 +366,18 @@ def bag_of_words(texts):
     """
     # Your code here
     dictionary = {} # maps word to unique index
+    with open('stopwords.txt', 'r') as myfile:
+        stopwords1 = myfile.read()
+    stopwordlist = extract_words(stopwords1) 
+
+     
+
     for text in texts:
         word_list = extract_words(text)
+        for word in stopwordlist:
+                while word in word_list:
+                    word_list.remove(word)
+        
         for word in word_list:
             if word not in dictionary:
                 dictionary[word] = len(dictionary)
@@ -376,15 +397,19 @@ def extract_bow_feature_vectors(reviews, dictionary):
     Feel free to change this code as guided by Problem 9
     """
     # Your code here
+    
 
+    
     num_reviews = len(reviews)
     feature_matrix = np.zeros([num_reviews, len(dictionary)])
 
     for i, text in enumerate(reviews):
         word_list = extract_words(text)
+        
+        
         for word in word_list:
             if word in dictionary:
-                feature_matrix[i, dictionary[word]] = 1
+                feature_matrix[i, dictionary[word]] = word_list.count(word)
     return feature_matrix
 #pragma: coderesponse end
 
