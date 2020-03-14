@@ -15,24 +15,14 @@ def closed_form(X, Y, lambda_factor):
         theta - (d + 1, ) NumPy array containing the weights of linear regression. Note that theta[0]
         represents the y-axis intercept of the model and therefore X[0] = 1
     """
-    # YOUR CODE HERE
-    # alist=[]
-    # for i in X.tolist():
-    #     i[0]=1
-    #     alist.append(i) 
-    # X= np.array(alist)
-    XT=X.transpose()
-    I=np.eye(X.shape[1])
-    A=(np.matmul(XT,X))- lambda_factor*I
     
-    A=np.linalg.inv(A)
-    XTY = np.matmul(XT,Y)
+    theta = np.linalg.lstsq(X, Y, rcond= lambda_factor)
     
-    # print("Expected :",np.matmul(np.linalg.inv(A),np.array([0.38846531, 0.73709948])))
-    # print("Reality :", XTY)
-    theta = np.matmul(A,XTY)
+    # for i in range(m.shape[0]):
+    #     m[i] += [c[i]]
+    
 
-    return theta    
+    return theta[0]
 
 
 ### Functions which are already complete, for you to use ###

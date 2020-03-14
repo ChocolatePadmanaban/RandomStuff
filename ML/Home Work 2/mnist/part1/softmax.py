@@ -64,8 +64,16 @@ def compute_cost_function(X, Y, theta, lambda_factor, temp_parameter):
         c - the cost value (scalar)
     """
     #YOUR CODE HERE
-    h_x= compute_probabilities(X,theta,temp_parameter)
+    h_x=[]
+    for i in range(X.shape[0]): 
+        h_x_i= np.array([np.dot(theta_i,X[i])/temp_parameter for theta_i in theta])
+        h_x_i= np.exp(h_x_i)        
+        h_x_i=h_x_i/np.sum(h_x_i)
+        h_x.append(h_x_i)
+    h_x= np.array(h_x)
+    h_x=h_x.transpose() 
     J_0 = 0
+
     for i in range(h_x.shape[1]):
         for j in range(h_x.shape[0]):
             if Y[i] == j:
