@@ -107,6 +107,15 @@ def run_gradient_descent_iteration(X, Y, theta, alpha, lambda_factor, temp_param
         theta - (k, d) NumPy array that is the final value of parameters theta
     """
     #YOUR CODE HERE
+    for j in range(theta.shape[0]):
+        term1=0
+        
+        for i in range(X.shape[0]):
+            if i==j:
+                term1+=1
+            numerator= np.dot(theta[j], X[i])/temp_parameter
+
+
     raise NotImplementedError
 
 def update_y(train_y, test_y):
