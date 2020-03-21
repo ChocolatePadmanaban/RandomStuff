@@ -33,18 +33,26 @@ def compute_probabilities(X, theta, temp_parameter):
     """
     #YOUR CODE HERE
     
-    h_x = []    
-    for i in range(X.shape[0]): 
-        h_x_i= np.array([np.dot(theta_i,X[i])/temp_parameter for theta_i in theta])
-        c= np.amax(h_x_i)
-        h_x_i=h_x_i-c*np.ones(theta.shape[0])
-        h_x_i= np.exp(h_x_i)        
-        h_x_i=h_x_i/np.sum(h_x_i)
-        h_x.append(h_x_i)
+    # h_x = []    
+    # for i in range(X.shape[0]): 
+    #     h_x_i= np.array([np.dot(theta_i,X[i])/temp_parameter for theta_i in theta])
+    #     c= np.amax(h_x_i)
+    #     h_x_i=h_x_i-c*np.ones(theta.shape[0])
+    #     h_x_i= np.exp(h_x_i)        
+    #     h_x_i=h_x_i/np.sum(h_x_i)
+    #     h_x.append(h_x_i)
         
-    h_x=np.array(h_x)
+    # h_x=np.array(h_x)
 
-    return h_x.transpose()
+    # return h_x.transpose()
+    X,theta=np.float64(X),np.float64(theta)
+    h_x = np.dot(theta,X.T)/temp_parameter
+    c=np.max(h_x,axis=0)
+    c = np.array([c for i in range(theta.shape[0])])
+    h_x = np.exp(h_x-c)
+    dividentcolom = np.sum(h_x,axis=0)
+    h_x = np.divide(h_x,dividentcolom)
+    return h_x
     raise NotImplementedError
 
 def compute_cost_function(X, Y, theta, lambda_factor, temp_parameter):
@@ -64,28 +72,32 @@ def compute_cost_function(X, Y, theta, lambda_factor, temp_parameter):
         c - the cost value (scalar)
     """
     #YOUR CODE HERE
-    h_x=[]
-    for i in range(X.shape[0]): 
-        h_x_i= np.array([np.dot(theta_i,X[i])/temp_parameter for theta_i in theta])
-        h_x_i= np.exp(h_x_i)        
-        h_x_i=h_x_i/np.sum(h_x_i)
-        h_x.append(h_x_i)
-    h_x= np.array(h_x)
-    h_x=h_x.transpose() 
-    J_0 = 0
+    # h_x=[]
+    # for i in range(X.shape[0]): 
+    #     h_x_i= np.array([np.dot(theta_i,X[i])/temp_parameter for theta_i in theta])
+    #     h_x_i= np.exp(h_x_i)        
+    #     h_x_i=h_x_i/np.sum(h_x_i)
+    #     h_x.append(h_x_i)
+    # h_x= np.array(h_x)
+    # h_x=h_x.transpose() 
+    # J_0 = 0
 
-    for i in range(h_x.shape[1]):
-        for j in range(h_x.shape[0]):
-            if Y[i] == j:
-                J_0+= np.log(h_x[j][i])
-    J_0=-J_0/h_x.shape[1]
-    J_1=0
-    for j in range(theta.shape[0]):
-        for i in range(theta.shape[1]):
-            J_1 +=  theta[j][i] 
-    J_1= lambda_factor*J_1/2
-    return J_0+J_1
-
+    # for i in range(h_x.shape[1]):
+    #     for j in range(h_x.shape[0]):
+    #         if Y[i] == j:
+    #             J_0+= np.log(h_x[j][i])
+    # J_0=-J_0/h_x.shape[1]
+    # J_1=0
+    # for j in range(theta.shape[0]):
+    #     for i in range(theta.shape[1]):
+    #         J_1 +=  theta[j][i] 
+    # J_1= lambda_factor*J_1/2
+    # return J_0+J_1
+    h_x=compute_probabilities(X, theta, temp_parameter)
+    mat = np.array([[True if i == j else False for j in Y] for i in range(h_x.shape[0])])
+    h_x=np.log(h_x)
+    return -np.sum(h_x[mat])/X.shape[0] + lambda_factor*.5*np.sum(theta*theta) 
+    
 
     raise NotImplementedError
 
@@ -107,17 +119,15 @@ def run_gradient_descent_iteration(X, Y, theta, alpha, lambda_factor, temp_param
         theta - (k, d) NumPy array that is the final value of parameters theta
     """
     #YOUR CODE HERE
-    n = X.shape[0]
-    d = X.shape[1]
-    k = theta.shape[0]
-    thetanew= np.zeros(theta.shape)
-    h_x = compute_probabilities(X, theta, temp_parameter)
-    
-    for m in range(k):        
-        thetanew[m]+= lambda_factor*theta[m]
-        thetanew[m]+= np.sum([ -X[i]*(1-h_x[m][i])   if Y[i] == m else X[i]*h_x[m][i]    for i in range(n)],axis=0)/n/temp_parameter
-    return theta - alpha*thetanew
-    raise NotImplementedError
+    itemp=1./temp_parameter
+    num_examples = X.shape[0]
+    num_labels = theta.shape[0]
+    probabilities = compute_probabilities(X, theta, temp_parameter)
+    # M[i][j] = 1 if y^(j) = i and 0 otherwise.
+    M = sparse.coo_matrix(([1]*num_examples, (Y,range(num_examples))), shape=(num_labels,num_examples)).toarray()
+    non_regularized_gradient = np.dot(M-probabilities, X)
+    non_regularized_gradient *= -itemp/num_examples
+    return theta - alpha * (non_regularized_gradient + lambda_factor * theta)
 
 def update_y(train_y, test_y):
     """
@@ -137,6 +147,7 @@ def update_y(train_y, test_y):
                     for each datapoint in the test set
     """
     #YOUR CODE HERE
+    return train_y % 3 , test_y % 3
     raise NotImplementedError
 
 def compute_test_error_mod3(X, Y, theta, temp_parameter):
@@ -155,6 +166,8 @@ def compute_test_error_mod3(X, Y, theta, temp_parameter):
         test_error - the error rate of the classifier (scalar)
     """
     #YOUR CODE HERE
+    assigned_labels = get_classification(X, theta, temp_parameter)
+    return 1 - np.mean(assigned_labels % 3 == Y )
     raise NotImplementedError
 
 def softmax_regression(X, Y, temp_parameter, alpha, lambda_factor, k, num_iterations):
