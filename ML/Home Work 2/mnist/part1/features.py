@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def project_onto_PC(X, pcs, n_components, feature_means):
+def project_onto_PC(X, pcs, n_components, feature_means =0):
     """
     Given principal component vectors pcs = principal_components(X)
     this function returns a new data array in which each sample in X
@@ -16,8 +16,8 @@ def project_onto_PC(X, pcs, n_components, feature_means):
     #       of the eigenvectors returned by principal_components().
     #       Note that each eigenvector is already be a unit-vector,
     #       so the projection may be done using matrix multiplication.
-    raise NotImplementedError
-
+    center_X =  X - feature_means
+    return np.dot(center_X, pcs[:,:n_components])
 
 ### Functions which are already complete, for you to use ###
 
@@ -131,7 +131,7 @@ def plot_PC(X, pcs, labels):
     the corresponding image.
     labels = a numpy array containing the digits corresponding to each image in X.
     """
-    pc_data = project_onto_PC(X, pcs, n_components=2)
+    pc_data = project_onto_PC(X, pcs, n_components=2 )
     text_labels = [str(z) for z in labels.tolist()]
     fig, ax = plt.subplots()
     ax.scatter(pc_data[:, 0], pc_data[:, 1], alpha=0, marker=".")

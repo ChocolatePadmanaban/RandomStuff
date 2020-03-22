@@ -16,13 +16,11 @@ def closed_form(X, Y, lambda_factor):
         represents the y-axis intercept of the model and therefore X[0] = 1
     """
     
-    theta = np.linalg.lstsq(X, Y, rcond= lambda_factor)
-    
-    # for i in range(m.shape[0]):
-    #     m[i] += [c[i]]
-    
+    # theta = np.linalg.lstsq(X, Y, rcond= lambda_factor)
+    # return theta[0]
+    sparce_matrix= np.linalg.inv(np.dot(X.T,X)+lambda_factor*np.identity(X.shape[1]))
+    return np.dot(sparce_matrix, np.dot(X.T,Y))
 
-    return theta[0]
 
 
 ### Functions which are already complete, for you to use ###
