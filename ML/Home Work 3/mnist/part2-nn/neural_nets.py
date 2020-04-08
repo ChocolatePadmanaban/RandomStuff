@@ -58,39 +58,45 @@ class NeuralNetwork():
 
         ### Forward propagation ###
         input_values = np.matrix([[x1],[x2]]) # 2 by 1
+        rectified_linear_unit1 = np.vectorize(rectified_linear_unit)
+        rectified_linear_unit_derivative1= np.vectorize(rectified_linear_unit_derivative)
+        output_layer_activation1= np.vectorize(output_layer_activation)
+        output_layer_activation_derivative1 = np.vectorize(output_layer_activation_derivative)
 
         # Calculate the input and activation of the hidden layer
-        hidden_layer_weighted_input = # TODO (3 by 1 matrix)
-        hidden_layer_activation = # TODO (3 by 1 matrix)
+        hidden_layer_weighted_input =  np.matmul(self.input_to_hidden_weights, input_values) + self.biases   # TODO (3 by 1 matrix)
+        hidden_layer_activation = rectified_linear_unit1(hidden_layer_weighted_input) # TODO (3 by 1 matrix)
 
-        output =  # TODO
-        activated_output = # TODO
+        output = np.matmul(self.hidden_to_output_weights ,hidden_layer_activation) # TODO
+        activated_output = output_layer_activation1(output) # TODO
 
         ### Backpropagation ###
 
         # Compute gradients
-        output_layer_error = # TODO
-        hidden_layer_error = # TODO (3 by 1 matrix)
+        output_layer_error = .5*(y-activated_output) # TODO
+        hidden_layer_error =  (self.hidden_to_output_weights.transpose()) *(y-activated_output)# TODO (3 by 1 matrix)
 
-        bias_gradients = # TODO
-        hidden_to_output_weight_gradients = # TODO
-        input_to_hidden_weight_gradients = # TODO
+        bias_gradients = (y-activated_output[0][0])*np.matmul(output_layer_activation_derivative1(output),np.matmul(self.hidden_to_output_weights,np.matmul(rectified_linear_unit_derivative1(hidden_layer_weighted_input).transpose(),np.matrix('1 ;1; 1')))) 
+        hidden_to_output_weight_gradients = (y-activated_output[0][0])*np.matmul(output_layer_activation_derivative1(output),hidden_layer_activation.transpose())
+        input_to_hidden_weight_gradients =(y-activated_output[0][0])*np.matmul(output_layer_activation_derivative1(output),np.matmul(self.hidden_to_output_weights,np.matmul(rectified_linear_unit_derivative1(hidden_layer_weighted_input),input_values.transpose())))    # TODO
 
         # Use gradients to adjust weights and biases using gradient descent
-        self.biases = # TODO
-        self.input_to_hidden_weights = # TODO
-        self.hidden_to_output_weights = # TODO
+        self.biases =self.biases- self.learning_rate* bias_gradients# TODO
+        self.input_to_hidden_weights=self.input_to_hidden_weights - self.learning_rate*input_to_hidden_weight_gradients # TODO
+        self.hidden_to_output_weights = self.hidden_to_output_weights-self.learning_rate*hidden_to_output_weight_gradients # TODO
+
+        return output_layer_error, hidden_layer_error
 
     def predict(self, x1, x2):
 
         input_values = np.matrix([[x1],[x2]])
 
         # Compute output for a single input(should be same as the forward propagation in training)
-        hidden_layer_weighted_input = # TODO
-        hidden_layer_activation = # TODO
-        output = # TODO
-        activated_output = # TODO
+        hidden_layer_weighted_input =  np.matmul(self.input_to_hidden_weights, input_values)    # TODO (3 by 1 matrix)
+        hidden_layer_activation = rectified_linear_unit(hidden_layer_weighted_input) # TODO (3 by 1 matrix)
 
+        output = np.dot(hidden_layer_activation.T + self.biases, self.hidden_to_output_weights) # TODO
+        activated_output = output_layer_activation(output) # TODO
         return activated_output.item()
 
     # Run this to train your neural network once you complete the train method
@@ -98,7 +104,8 @@ class NeuralNetwork():
 
         for epoch in range(self.epochs_to_train):
             for x,y in self.training_points:
-                self.train(x[0], x[1], y)
+                somevalues = self.train(x[0], x[1], y)
+                print(somevalues)
 
     # Run this to test your neural network implementation for correctness after it is trained
     def test_neural_network(self):
@@ -118,6 +125,3 @@ x.train_neural_network()
 # UNCOMMENT THE LINE BELOW TO TEST YOUR NEURAL NETWORK
 # x.test_neural_network()
 
-
-if __name__ =="__main__":
-    
