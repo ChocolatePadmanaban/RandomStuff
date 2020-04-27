@@ -4,6 +4,16 @@ import numpy as np
 from common import GaussianMixture
 
 
+def pdf_Normal(x, mu, sigma2,d=1):
+    '''
+    :returns the pdf of N(mu, sigma^2) at the point x
+    :param x: (d,) numpy array
+    :param mu:(d,) numpy array 
+    :param sigma2: float
+    :return: float
+    '''
+    return np.exp((np.linalg.norm(x-mu))**2/(-2*sigma2))/(2*np.pi*sigma2)**(d/2)
+
 
 def estep(X: np.ndarray, mixture: GaussianMixture) -> Tuple[np.ndarray, float]:
     """E-step: Softly assigns each datapoint to a gaussian component
@@ -17,20 +27,16 @@ def estep(X: np.ndarray, mixture: GaussianMixture) -> Tuple[np.ndarray, float]:
             for all components for all examples
         float: log-likelihood of the assignment
     """
-    n, d = X.shape
-    K, _ = mixture.mu.shape
-    postnorm = np.zeros((n, K))    
     
+    p_x_i=np.array([[pi*pdf_Normal(x_i,mixture.mu[i],mixture.var[i],d=len(x_i))  for i, pi in enumerate(mixture.p)] for x_i in X],dtype=float)
+    p_x_i_sum = np.sum(p_x_i,axis=1) 
+    
+    p_j_i = p_x_i/ p_x_i_sum[:, None]   
+    
+    
+    loglike = np.sum(np.log(p_x_i_sum))
 
-    for i, row in enumerate(X):
-        for j in range(K):            
-            postnorm[i,j] = np.exp((np.linalg.norm(row-mixture.mu[j]))**2/(-2*mixture.var[j]))/(2*np.pi*mixture.var[j])**(d/2)
-    postcol= postnorm.sum(axis=1)
-    post = postnorm/postcol [:,None]
-    postlog = np.sum(np.log(np.sum(post*postnorm,axis=1)))
-
-    return post , postlog
-
+    return p_j_i , loglike
 
 
 def mstep(X: np.ndarray, post: np.ndarray) -> GaussianMixture:
@@ -48,20 +54,20 @@ def mstep(X: np.ndarray, post: np.ndarray) -> GaussianMixture:
     n, d = X.shape
     _, K = post.shape
 
-    n_hat = post.sum(axis=0)
-    p = n_hat / n
-
-    cost = 0
-    mu = np.zeros((K, d))
-    var = np.zeros(K)
+    p_sum = np.sum(post,axis=0)
+    p= p_sum/n
+    
+    
+    mu = np.zeros((K, d),dtype=float)
+    var = np.zeros(K,dtype=float)
 
     for j in range(K):
-        mu[j, :] = post[:, j] @ X / n_hat[j]
+        mu[j, :] = post[:, j] @ X / p_sum[j]
         sse = ((mu[j] - X)**2).sum(axis=1) @ post[:, j]
-        cost += sse
-        var[j] = sse / (d * n_hat[j])
+        var[j] = sse / (d * p_sum[j])
 
-    return GaussianMixture(mu, var, p), cost
+
+    return GaussianMixture(mu, var, p)
 
 
 def run(X: np.ndarray, mixture: GaussianMixture,
@@ -81,10 +87,9 @@ def run(X: np.ndarray, mixture: GaussianMixture,
     """
     prev_cost = None
     cost = None
-    while (prev_cost is None or prev_cost - cost > 1e-4):
+    while (prev_cost is None or abs(prev_cost - cost) > 1e-6*abs(cost)):
         prev_cost = cost
-        post, _ = estep(X, mixture)
-        print(_)
-        mixture, cost = mstep(X, post)
+        post, cost= estep(X, mixture)
+        mixture = mstep(X, post)
 
     return mixture, post, cost

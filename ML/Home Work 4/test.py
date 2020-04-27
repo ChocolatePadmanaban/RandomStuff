@@ -10,3 +10,5 @@ n, d = X.shape
 seed = 0
 
 # TODO: Your code here
+
+print(X_gold)
