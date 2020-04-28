@@ -4,6 +4,15 @@ import numpy as np
 from scipy.special import logsumexp
 from common import GaussianMixture
 
+def pdf_Normal(x, mu, sigma2,d=1):
+    '''
+    :returns the pdf of N(mu, sigma^2) at the point x
+    :param x: (d,) numpy array
+    :param mu:(d,) numpy array 
+    :param sigma2: float
+    :return: float
+    '''
+    return np.exp((np.linalg.norm(x-mu))**2/(-2*sigma2))/(2*np.pi*sigma2)**(d/2)
 
 def estep(X: np.ndarray, mixture: GaussianMixture) -> Tuple[np.ndarray, float]:
     """E-step: Softly assigns each datapoint to a gaussian component
@@ -18,7 +27,20 @@ def estep(X: np.ndarray, mixture: GaussianMixture) -> Tuple[np.ndarray, float]:
         float: log-likelihood of the assignment
 
     """
-    raise NotImplementedError
+    n, d = X.shape
+    p_x_i=np.zeros((n, len(mixture.p)), dtype=float)
+    for k,x_i in enumerate(X):
+        for i,pi in enumerate(mixture.p):
+            Cu= [j for j,x in enumerate(x_i) if x!=0]
+            xu=np.array([x for x in x_i if x != 0],dtype=float) 
+            mu= np.array([mixture.mu[i][j] for j in Cu],dtype=float)
+            var = mixture.var[i]
+            d=len(Cu)
+            p_x_i[k][i]= pi*pdf_Normal(xu,mu,var,d)    
+    p_x_i_sum = np.sum(p_x_i,axis=1) 
+    p_j_u = p_x_i/ p_x_i_sum[:, None]   
+    loglike = np.sum(np.log(p_x_i_sum))
+    return p_j_u , loglike
 
 
 
@@ -37,7 +59,24 @@ def mstep(X: np.ndarray, post: np.ndarray, mixture: GaussianMixture,
     Returns:
         GaussianMixture: the new gaussian mixture
     """
-    raise NotImplementedError
+    n, d = X.shape
+    _, K = post.shape
+    p_sum = np.sum(post,axis=0)
+    p= p_sum/n       
+    mu = mixture.mu
+    var = mixture.var
+    CuT = X >0
+    for j in range(K):
+        for i in range(d):
+            mu[j, i] = np.sum(post[:,j]*X[:,i]) / np.sum(post[:,j]*CuT[:,i])  #post[:, j] @ X /  p_sum
+    for j in range(K):        
+        normMat = ((mu[j] - X)**2) * CuT
+        sse = normMat.sum(axis=1) @ post[:, j]
+        denominator = sum([sum(CuT[i])*sum(post[i]) for i in range(n)])
+        var[j] = sse / denominator
+        if var[j]<.25:
+            var[j]=.25
+    return GaussianMixture(mu, var, p)
 
 
 def run(X: np.ndarray, mixture: GaussianMixture,
@@ -55,7 +94,14 @@ def run(X: np.ndarray, mixture: GaussianMixture,
             for all components for all examples
         float: log-likelihood of the current assignment
     """
-    raise NotImplementedError
+    prev_cost = None
+    cost = None
+    while (prev_cost is None or abs(prev_cost - cost) > 1e-6*abs(cost)):
+        prev_cost = cost
+        post, cost= estep(X, mixture)
+        mixture = mstep(X,post, mixture)
+
+    return mixture, post, cost
 
 
 def fill_matrix(X: np.ndarray, mixture: GaussianMixture) -> np.ndarray:
