@@ -36,7 +36,7 @@ def epsilon_greedy(state_1, state_2, q_func, epsilon):
     """
     # TODO Your code here
     if np.random.binomial(1,epsilon):
-        action_index, object_index = np.random.choice(q_func.shape[2]),np.random.choice(q_func.shape[3])
+        action_index, object_index = np.random.choice(NUM_ACTIONS),np.random.choice(NUM_OBJECTS)
     else:
         action_index, object_index = np.unravel_index(np.argmax(q_func[state_1,state_2]),q_func[state_1,state_2].shape)
     return (action_index, object_index)
@@ -97,14 +97,15 @@ def run_episode(for_training):
     epi_reward = 0
     # initialize for each episode
     # TODO Your code here
-    t=0 
+    t=0  
 
     (current_room_desc, current_quest_desc, terminal) = framework.newGame()
-    current_state_1,current_state_2= dict_room_desc[current_room_desc], dict_quest_desc[current_quest_desc]
+    
     while not terminal:
         # Choose next action and execute
-        # TODO Your code here        
-        action_index, object_index = epsilon_greedy(current_state_1, current_state_2, q_func, epsilon)
+        # TODO Your code here
+        current_state_1,current_state_2= dict_room_desc[current_room_desc], dict_quest_desc[current_quest_desc]        
+        action_index, object_index = epsilon_greedy(current_state_1, current_state_2, q_func, epsilon)        
 
         next_room_desc, next_quest_desc, reward, terminal = framework.step_game(current_room_desc, current_quest_desc, action_index, object_index)
         next_state_1, next_state_2 =  dict_room_desc[next_room_desc], dict_quest_desc[next_quest_desc]
@@ -123,7 +124,7 @@ def run_episode(for_training):
             t+=1
         # prepare next step
         # TODO Your code here
-        current_state_1, current_state_2= next_state_1, next_state_2
+        current_room_desc, current_quest_desc= next_room_desc, next_quest_desc
     if not for_training:
         return epi_reward
 
@@ -157,6 +158,7 @@ def run():
             "Avg reward: {:0.6f} | Ewma reward: {:0.6f}".format(
                 np.mean(single_run_epoch_rewards_test),
                 utils.ewma(single_run_epoch_rewards_test)))
+    print(q_func.shape, np.max(q_func))
     return single_run_epoch_rewards_test
 
 
