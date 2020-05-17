@@ -68,7 +68,7 @@ def SumHindgeLoss(x,y,theta,theta_0):
 
 
 if __name__ =="__main__":
-    x= np.array([[0,0],[2,0],[3,0],[0,2],[2,2],[5,1],[5,2],[2,4],[4,4],[5,5]])
+    x= np.array([[0,0],[2,0],[3,0],[0,2],[2,2],[5,1],[5,2],[2,4],[4,4],[5,5]],dtype=float)
     y= np.array([-1,-1,-1,-1,-1,1,1,1,1,1])
     alpha= np.array([1,9,10,5,9,11,0,3,1,1])
     theta, theta_0 ,dummy= Maximizemargin(x,y)
