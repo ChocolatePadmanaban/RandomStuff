@@ -11,7 +11,7 @@ print("Stadus code",result.status_code)
 # for status code refer https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 
 #print headers
-print("Headers: ", result.headers)
+#print("Headers: ", result.headers)
 #https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
 
 #source of the page
@@ -24,4 +24,9 @@ soup = BeautifulSoup(src, 'lxml')
 
 #find all the links
 links= soup.find_all('a')
-print(links, '\n')
+#print(links, '\n')
+
+for link in links:
+    if "About" in link.text:
+        print(link)
+        print(link.attrs['href'])
