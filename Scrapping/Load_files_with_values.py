@@ -1,3 +1,4 @@
+# Load_files_with_values.py
 import bs4 as bs
 import sys
 import urllib.request
@@ -24,9 +25,8 @@ class Page(QWebEnginePage):
 
 
 def main():
-    page = Page('https://pythonprogramming.net/parsememcparseface/')
-    soup = bs.BeautifulSoup(page.html, 'html.parser')
-    js_test = soup.find('p', class_='jstest')
-    print (js_test.text)
-
+    page = Page('https://www.bigbasket.com/cl/fruits-vegetables/?nc=nb')
+    soup = bs.BeautifulSoup(page.html, 'lxml')
+    for line in soup: 
+        if "mango" in line: print(line)
 if __name__ == '__main__': main()
