@@ -9,11 +9,10 @@ PATH="C:\Program Files (x86)\chromedriver.exe"
 driver  = webdriver.Chrome(PATH)
 
 driver.get("https://www.bigbasket.com/cl/fruits-vegetables/")
+
 # search = driver.find_element(by='id',value='input')
 # search.send_keys("Mango")
 # search.send_keys(Keys.RETURN)
-
-
 
 
 try:
