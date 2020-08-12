@@ -3,6 +3,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 import time
 from time import gmtime, strftime
 
@@ -17,22 +18,16 @@ driver = webdriver.Chrome(PATH, chrome_options=options)
 
 driver.implicitly_wait(10)
 
-driver.get("https://www.bigbasket.com/cl/fruits-vegetables/")
+driver.get("https://www.bigbasket.com/")
 
-# try:
-#     element = WebDriverWait(driver,30).until(
-#         EC.presence_of_element_located((By.CLASS,"arrow-maker"))
-#     )
-#     element.clear()
-#     element.click()
-
-#     # element = WebDriverWait(driver,30).until(
-#     #     EC.presence_of_element_located((By.ID, "sow-button-19310003"))
-#     # )
-#     # element.click()
+try:
     
-# except Exception as e:
-#     print(e)
+
+    element = WebDriverWait(driver,30).until(EC.presence_of_element_located((By.CLASS_NAME, "hvc")))
+    element.click()
+    
+except Exception as e:
+    print(e)
 
 SCROLL_PAUSE_TIME = 2
 
