@@ -25,6 +25,10 @@ try:
 
     element = WebDriverWait(driver,30).until(EC.presence_of_element_located((By.CLASS_NAME, "hvc")))
     element.click()
+    element = driver.find_element_by_xpath("""//*[@id="headerControllerId"]/header/div/div/div/div/ul/li[2]/div/div/div[2]/form/div[1]/div/div/span/span[2]/span""")
+    driver.execute_script("$(arguments[0]).click();", element)
+    
+
     
 except Exception as e:
     print(e)
