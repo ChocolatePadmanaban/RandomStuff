@@ -20,20 +20,7 @@ def main():
 
     driver.get("https://www.bigbasket.com/cl/fruits-vegetables/")
 
-    # try:
-    #     element = WebDriverWait(driver,30).until(
-    #         EC.presence_of_element_located((By.CLASS,"arrow-maker"))
-    #     )
-    #     element.clear()
-    #     element.click()
 
-    #     # element = WebDriverWait(driver,30).until(
-    #     #     EC.presence_of_element_located((By.ID, "sow-button-19310003"))
-    #     # )
-    #     # element.click()
-        
-    # except Exception as e:
-    #     print(e)
 
     SCROLL_PAUSE_TIME = 2
 
