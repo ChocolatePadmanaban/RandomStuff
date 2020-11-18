@@ -31,11 +31,11 @@ int main() {
             }
         }
         for(int j=0; j<strlen(b_string);j++){
-            if(b_string[j]=="0"){
+            if(b_string[j]=='0'){
                 common_count++;
             }
         }
-        printf("%d",strlen(a_string)+strlen(b_string)-2*common_count);
+        printf("%d\n",strlen(a_string)+strlen(b_string)-2*common_count);
 
     }
     return 0;
