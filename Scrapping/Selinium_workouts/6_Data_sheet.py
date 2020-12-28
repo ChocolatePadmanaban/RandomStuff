@@ -7,7 +7,7 @@ import time
 from time import gmtime, strftime
 
 def main():
-    PATH="C:\Program Files (x86)\chromedriver.exe"
+    PATH="/usr/bin/chromedriver_linux64/chromedriver"
 
 
     options = webdriver.ChromeOptions()

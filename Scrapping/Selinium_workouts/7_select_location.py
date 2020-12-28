@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 import time
 from time import gmtime, strftime
 #just checking the change
-PATH="C:\Program Files (x86)\chromedriver.exe"
+PATH="/usr/bin/chromedriver_linux64/chromedriver"
 
 
 options = webdriver.ChromeOptions()
