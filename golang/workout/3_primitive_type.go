@@ -30,5 +30,10 @@ func main(){
 	a=a-2//=8
 	fmt.Printf("Bit shifting left 3 places: %v \n ", a << 3)
 	fmt.Printf("Bit shifting right 3 places: %v \n", a >> 3)
+	n1:= 3.14
+	n1=13.7e72
+	n1=2.1E14
+	fmt.Printf("Printing Value of n though re assiging three times: %v Type: %T \n", n1 , n1)
+
 }
 
