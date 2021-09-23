@@ -8,7 +8,8 @@ import (
 )
 
 func myHandler(w http.ResponseWriter, req *http.Request) {
-	io.WriteString(w, "hello, world!\n")
+	var message string = "hello world " + string(req.RemoteAddr) + "\n"
+	io.WriteString(w, message)
 }
 
 func main() {
