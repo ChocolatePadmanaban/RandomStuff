@@ -1,4 +1,4 @@
-// #hello_example
+// #1_hello_world.go
 package main
 
 import "fmt"
@@ -6,5 +6,3 @@ import "fmt"
 func main() {
 	fmt.Println("Hello World")
 }
-
-// #hello_example
