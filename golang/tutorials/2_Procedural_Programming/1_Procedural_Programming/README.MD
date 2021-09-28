@@ -161,3 +161,102 @@ operators.**
   - or
   - not
 ```
+An example code for logical relational operators 
+```
+// 6_logical_operators.go
+package main
+
+import "fmt"
+
+func main() {
+	// Creates myNum1 with value 1
+	myNum1 := 1
+	// Creates myNum2 with value 2
+	myNum2 := 2
+	// Prints True if 2 is greater than 1,
+	// False otherwise
+	fmt.Println(2 > 1)
+	// Prints True if myNum2 is greater than myNum1
+	// False otherwise
+	fmt.Println(myNum2 > myNum1)
+
+}
+
+```
+Output:
+```
+$ go run 6_logical_operators.go 
+true
+true
+$ 
+```
+An example code for logical boolean operators 
+```
+// 7_logical_operators.go
+package main
+
+import "fmt"
+
+func main() {
+	// Creates myNum1 with value 1
+	myNum1 := 1
+	// Creates myNum2 with value 2
+	myNum2 := 2
+	// Creates myNum3 with value 3
+	myNum3 := 3
+	// Prints True if 2 is between 1 and 3,
+	// False otherwise
+	fmt.Println(2 > 1 && 2 < 3)
+	// Prints True if myNum2 is between myNum1 and myNum3
+	// False otherwise
+	fmt.Println(myNum2 > myNum1 && myNum2 < myNum3)
+
+}
+```
+Output:
+```
+$ go run 7_logical_operators.go 
+true
+true
+$ 
+```
+### Mathematical Operators 
+Like boolean operators, mathematical operators operate on variables. Specifically,
+they perform mathematical operations. We can add to our running example to show
+the role of mathematical operators:
+```
+// 8_mathematical_operators.go
+package main
+
+import "fmt"
+
+func main() {
+	// Creates myNum1 with value 1
+	myNum1 := 1
+	// Creates myNum2 with value 2
+	myNum2 := 2
+	// Creates myNum3 with value 3
+	myNum3 := 3
+	// Prints True if 3 > 1+2,
+	// False otherwise
+	fmt.Println(3 > 1+2)
+	// Prints True if myNum2 is between myNum1 and myNum3
+	// False otherwise
+	fmt.Println(myNum3 > myNum2+myNum1)
+
+}
+
+```
+Output:
+```
+$ go run 8_mathematical_operators.go 
+false
+false
+
+```
+## Comments and Documentation 
+Before we move on, there’s one more fundamental notion of programming that we
+should cover: **comments** and **documentation**.
+
+
+
