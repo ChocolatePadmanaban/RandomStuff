@@ -258,5 +258,90 @@ false
 Before we move on, there’s one more fundamental notion of programming that we
 should cover: **comments** and **documentation**.
 
+### In-Line Comments
+In-line comments give line-by-line descriptions of what a segment of code does.
 
+```
+// 9_inline_comments.go
+package main
 
+import "fmt"
+
+func main() {
+	//Creates the variable i
+	i := 1
+	if i > 0 { // Checks if greater than 0
+		//Prints if greater than 0
+		fmt.Println("Greater than 0")
+	}
+	if i > 1 { // Greater than 1
+		//Prints if greater than 1
+		fmt.Println("Greater than 1")
+	}
+}
+```
+Output:
+```
+$ go run 9_inline_comments.go 
+Greater than 0
+$ 
+```
+### Code Block Comments
+```
+// 10_code_block_comments.go
+package main
+
+import "fmt"
+
+//Count function
+//Prints the number from 1 to i
+//On a single line
+func countdown(i int) {
+	for j := 1; j < i+1; j++ {
+		fmt.Printf("%d ", j)
+	}
+	fmt.Println()
+}
+
+func main() {
+	countdown(10)
+	countdown(5)
+	countdown(2)
+}
+
+```
+Output :
+```
+$ go run 10_code_block_comments.go 
+1 2 3 4 5 6 7 8 9 10 
+1 2 3 4 5 
+1 2 
+$ 
+```
+### Self-Documenting Code
+Finally, wherever possible, we should write code that documents itself based on the
+names we choose for things
+
+```
+package main
+
+import "fmt"
+
+func main() {
+	numberOfTimesToPrint := 5
+	for i := 0; i < numberOfTimesToPrint; i++ {
+		fmt.Println("Hello World")
+	}
+}
+
+```
+Output:
+```
+$ go run 11_self_documentation_code.go 
+Hello World
+Hello World
+Hello World
+Hello World
+Hello World
+$
+```
