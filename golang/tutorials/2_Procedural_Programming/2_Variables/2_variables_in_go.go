@@ -7,11 +7,11 @@ import (
 )
 
 func main() {
-	aNumber := -2
-	aDecimal := 7.1
-	aString := "Hello world"
-	aBoolean := true
-	aDate := time.Now()
+	var aNumber int = -2
+	var aDecimal float64 = 7.1
+	var aString string = "Hello world"
+	var aBoolean bool = true
+	var aDate time.Time = time.Now()
 	fmt.Println(aNumber)
 	fmt.Println(aDecimal)
 	fmt.Println(aString)

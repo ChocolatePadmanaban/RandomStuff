@@ -12,7 +12,7 @@ A variable is a name that holds some value. It’s like a question with an answe
 question always exists, but the answer to the question might change. Let’s think of
 some examples:
 
-- How many kids do I have? The variable would be the count of David’s kids, and
+- How many kids do David have? The variable would be the count of David’s kids, and
 the value would be one. That might change, though.
 - What’s the current stock price of Microsoft? The variable would be Microsoft
 stock price, and the current value would be 53.74.
@@ -61,11 +61,11 @@ import (
 )
 
 func main() {
-	aNumber := -2
-	aDecimal := 7.1
-	aString := "Hello world"
-	aBoolean := true
-	aDate := time.Now()
+	var aNumber int = -2
+	var aDecimal float64 = 7.1
+	var aString string = "Hello world"
+	var aBoolean bool = true
+	var aDate time.Time = time.Now()
 	fmt.Println(aNumber)
 	fmt.Println(aDecimal)
 	fmt.Println(aString)
@@ -122,4 +122,123 @@ $ go run 3_naming_rules_and_conventions.go
 ./3_naming_rules_and_conventions.go:8:6: syntax error: unexpected :=, expecting expression
 ./3_naming_rules_and_conventions.go:9:1: syntax error: unexpected }, expecting expression
 $ 
+```
+However, beyond these rules, there are certain conventions we want to follow.
+The computer isn’t going to yell at us if we don’t follow these, but other people that
+have to work with our code might. The main convention is that our code should be
+self-documenting. What that means is we should be able to read the variable name
+and know what kind of data it’s holding
+```
+// 4_naming_rules_and_conventions.go
+package main
+
+import "fmt"
+
+func main() {
+	// Bad Variables
+	a := 30
+	foo := "David"
+	qwerty := 10
+	fmt.Println(a, foo, qwerty)
+	// Good Variables
+	var age int = 30
+	var firstName string = "David"
+	var catCount int = 10
+	fmt.Println(age, firstName, catCount)
+}
+
+```
+Output:
+```
+$ go run 4_naming_rules_and_conventions.go 
+30 David 10
+30 David 10
+```
+
+We’ve said that variables are like questions, and values are like their answers. The
+variable sticks around while the value changes. There are a few principles that go
+along with this, though.
+
+## Data Types
+
+Every variable has a name, and it should have a value as well if we’re using it.
+There’s a third thing that variables have: types. Every variable has a type of infor-
+mation it’s storing.
+
+### Basic Data Types
+There are some basic types you’ll see very often:
+- Integers, or whole numbers.
+- Real numbers, or numbers that can have decimals.
+- Characters, like individual letters and numbers.
+- Strings, which are collections of characters in a row.
+- Booleans, which just hold either true or false.
+
+However, not all variables hold these basic types. Variables can hold nearly any
+type of information you can imagine. You could have variables that hold colors or
+pictures. Later in the class, we’ll even talk about how you can create your own data
+types. For example, you could create a Person type that includes a person’s name,
+birthday, and favorite food.
+```
+//5_common_types.go
+package main
+
+import (
+	"fmt"
+	"reflect"
+)
+
+func main() {
+	var myInteger int = 5
+	//first of the three methods to determine type
+	fmt.Printf("%T \n", myInteger)
+	var myFloat float64 = 5.0
+	//second method to determine type
+	fmt.Println(reflect.TypeOf(myFloat))
+	var myString string = "5.0"
+	fmt.Println(reflect.ValueOf(myString).Kind())
+	var myBoolean bool = true
+	fmt.Println(reflect.ValueOf(myBoolean).Kind())
+}
+
+```
+Output 
+```
+$ go run 5_common_types.go 
+int 
+float64
+string
+bool
+$ 
+```
+## Mixing Types
+
+Operators are the most basic way we act
+on variables. Some of the basic operators are mathematical, things like addition and
+subtraction, so let’s briefly talk about the interaction between types and operators.
+For example, what happens when we try to multiply two variables with different
+types?
+```
+// 6_mixing_types.go
+package main
+
+import "fmt"
+
+func main() {
+	var myNumber1 int = 5
+	var myNumber2 int = 3
+	var myString string = "Hello world"
+	var myFloat float64 = 5.1
+	fmt.Println(myNumber1 * myNumber2)
+	fmt.Println(myFloat * float64(myNumber2))
+	fmt.Println(myNumber1 * myString)
+
+}
+```
+Output:
+```
+$ go run 6_mixing_types.go 
+# command-line-arguments
+./6_mixing_types.go:13:24: invalid operation: myNumber1 * myString (mismatched types int and string)
+$ 
+
 ```
