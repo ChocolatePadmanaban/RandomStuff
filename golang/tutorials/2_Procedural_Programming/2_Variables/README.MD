@@ -242,3 +242,86 @@ $ go run 6_mixing_types.go
 $ 
 
 ```
+## Type Conversions in Golang 
+
+There will be times when we need to convert among the different data types. For
+example, imagine writing a program that reads some text in from a file. It encounters
+the text “5554321.” Should this be stored as the string of text “5554321” or as the
+number 5,554,321? Or, imagine it encounters the worse “False”. Should this remain
+as the text “False” or be stored as the boolean value False? The correct answer
+will depend on the purpose of the code, and so we need a way to convert between
+the different types.
+
+### Converting to Strings
+
+Fortunately, golang provides a very simple way of accomplishing this. First, let’s
+look at converting numbers into strings. It will become more clear as we go on in the
+material why this is useful, but for now we’ll just focus on how to do it.
+
+```
+// 7_converting_to_strings.go
+package main
+
+import (
+	"fmt"
+	"reflect"
+)
+
+func main() {
+	var myNumber int = 5
+	fmt.Printf("%T \n", myNumber)
+	var myNumberAsString string = string(myNumber)
+	fmt.Println(reflect.TypeOf(myNumberAsString))
+}
+```
+OutPut:
+```
+$ go run 7_converting_to_strings.go 
+int 
+string
+$ 
+```
+The string() function will work to convert nearly any kind of variable to some
+kind of string.
+```
+package main
+
+import (
+	"fmt"
+	"reflect"
+	"time"
+)
+
+func main() {
+	var myDate = time.Now()
+	var myDateAsString string = myDate.String()
+	fmt.Println(reflect.TypeOf(myDateAsString), myDateAsString)
+}
+
+```
+Output:
+```
+$ go run 8_converting_to_string.go 
+string 2021-10-02 14:51:38.832126584 +0530 IST m=+0.000133644
+$ 
+```
+In practice, you may not always need to do this
+```
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	var myDate time.Time = time.Now()
+	fmt.Println(myDate)
+}
+
+```
+Output
+```
+$ go run 9_converting_to_string.go 
+2021-10-02 15:03:38.454841859 +0530 IST m=+0.000116320
+```
