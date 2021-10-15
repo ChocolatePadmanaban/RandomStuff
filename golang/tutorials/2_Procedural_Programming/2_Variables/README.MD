@@ -329,3 +329,177 @@ $ go run 9_converting_to_string.go
 ### Converting From Strings
 
 Practically speaking, converting from strings to other values is just as easy
+
+```
+package main
+
+import (
+	"fmt"
+	"reflect"
+	"strconv"
+)
+
+func main() {
+	var myIntAsString string = "5"
+	myInt, err := strconv.Atoi(myIntAsString)
+	if err == nil {
+		fmt.Println(reflect.TypeOf(myInt))
+	}
+
+	var myFloatAsString string = "5.1"
+	myFloat, err := strconv.ParseFloat(myFloatAsString, 64)
+	if err == nil {
+		fmt.Println(reflect.TypeOf(myFloat))
+	}
+
+	var myBoolAsString string = "true"
+	myBool, err := strconv.ParseBool(myBoolAsString)
+	if err == nil {
+		fmt.Println(reflect.TypeOf(myBool))
+	}
+}
+
+```
+Output:
+```
+$ go run 10_converting_from_string.go 
+int
+float64
+bool
+```
+There is an important note here compared to the string conversion function.
+Whereas almost anything can be converted to a string, not everything can be converted to integers, booleans, and floats. For example, if a string holds an integer, we can still convert it to a float because golang knows what to to with int given as float. However, if a string holds a float,
+we cannot convert it to an int because golang does not know what to do with a float given as int
+```
+//11_converting_from_string.go
+package main
+
+import (
+	"fmt"
+	"reflect"
+	"strconv"
+)
+
+func main() {
+	var myIntAsString string = "5"
+	myIntAsFloat, err := strconv.ParseFloat(myIntAsString, 64)
+	// this will work
+	if err == nil {
+		fmt.Println(reflect.TypeOf(myIntAsFloat))
+	}
+
+	var myFloatAsString string = "5.1"
+	myFloatAsInt, err := strconv.Atoi(myFloatAsString)
+	// this will cause an error
+	if err == nil {
+		fmt.Println(reflect.TypeOf(myFloatAsInt))
+	} else {
+		fmt.Println(err)
+	}
+}
+```
+Output:
+```
+$ go run 11_converting_from_string.go 
+float64
+strconv.Atoi: parsing "5.1": invalid syntax
+```
+
+### User Input
+
+Now is a good time to talk about getting input from the user in console applications. Imagine you’re writing a program that returns the square of a number that the user puts in. Without letting the user edit the code, how do you write this?
+
+Here's How in Golang we have scanln. Whatever text you supply to input is given to the user as a prompt. The program then waits for the user to type something into the console and press enter; whatever the user types is stored in the variable.
+```
+//12_user_input.go
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Enter an Integer: ")
+	var myInt int
+	fmt.Scanln(&myInt)
+	fmt.Println("The Entered integer is: ", myInt)
+}
+
+```
+Output:
+```
+$ go run 12_user_input.go 
+Enter an Integer: 
+13
+The Entered integer is:  13
+```
+
+In Golang the type of the input deponds on the **variable assignation**
+```
+//13_user_input.go
+package main
+
+import (
+	"fmt"
+	"reflect"
+)
+
+func main() {
+	fmt.Println("Enter an Integer: ")
+	var myInt int
+	fmt.Scanln(&myInt)
+	fmt.Println("The Type of the variable entered before is: ", reflect.TypeOf(myInt))
+
+	fmt.Println("Enter a Float: ")
+	var myFloat float64
+	fmt.Scanln(&myFloat)
+	fmt.Println("The Type of the variable entered before is: ", reflect.TypeOf(myFloat))
+
+	fmt.Println("Enter a string: ")
+	var myString string
+	fmt.Scanln(&myString)
+	fmt.Println("The Type of the variable entered before is: ", reflect.TypeOf(myString))
+}
+
+```
+Output:
+```
+$ go run 13_user_input.go 
+Enter an Integer: 
+12
+The Type of the variable entered before is:  int
+Enter a Float: 
+3.14
+The Type of the variable entered before is:  float64
+Enter a string: 
+gdhdgfgdg
+The Type of the variable entered before is:  string
+```
+
+## Reserved Keywords in Go
+
+In an earlier lesson, we noted that one of the rules around what names you can use for variables is that you can’t use some of the reserved keywords. What this means is that there are certain words to which go attaches special
+meaning and uses to understand what you’re telling it to do. If you try to use these words to mean something different, go gets confused. 
+
+This occurs in the real world in natural conversation, too. For example, if you named your dog “for” or “some,” people would get confused when you would say things like “Can you take for for a walk?” or “Can you pour some some food?”
+
+### Go's Reserved Words:
+
+break, default, func, interface, select, case, defer, go, map, struct, chan, else, goto, package, switch, const, fallthrough, if, range, type, continue, for, import, return, var. 
+
+misusing keywords will lead to error :-
+```
+//14_misusing_keywords.go
+package main
+
+import "fmt"
+
+func main() {
+	var default int = 1
+	fmt.Println(default)
+}
+```
+Output:
+```
+# command-line-arguments
+./14_misusing_keywords.go:7:6: syntax error: unexpected default, expecting name
+./14_misusing_keywords.go:8:14: syntax error: unexpected default, expecting expression
+```
