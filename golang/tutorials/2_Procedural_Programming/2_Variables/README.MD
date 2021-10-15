@@ -325,3 +325,7 @@ Output
 $ go run 9_converting_to_string.go 
 2021-10-02 15:03:38.454841859 +0530 IST m=+0.000116320
 ```
+
+### Converting From Strings
+
+Practically speaking, converting from strings to other values is just as easy
