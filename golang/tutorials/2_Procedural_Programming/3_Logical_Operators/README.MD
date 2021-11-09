@@ -198,3 +198,44 @@ $ go run 6_string_compare.go
 0
 -1
 ```
+
+## Boolean Operators
+
+Operators like “and” and “or” that act on pairs of boolean (true or false) values, or that act on single boolean values, like “not”.
+
+### And
+An operator that acts on two boolean (true or false) values and evaluates to “true” if and only if both are true.
+
+example:
+
+onList = grapes on the shopping list
+
+inStock = grapes are in stock in the store 
+
+**onList _and_ inStock**
+
+### Or
+
+An operator that acts on two boolean (true or false) values and evaluates to “true” if and only if at least one is true.
+
+example:
+
+onList = grapes are on shopping list
+
+onSale = grapes are on Sale for discount 
+
+**onList _or_ onSale**
+
+### Xor
+
+An operator that acts on two boolean (true or false) values and evaluates to “true” if and only if exactly one is true.
+
+### Not
+
+An operator that acts on one boolean (true or false) value and evaluates to the opposite value (false becomes true, true becomes false).
+
+example:
+
+rotten = grapes are rotten 
+
+**_not_ rotten**
